@@ -1,4 +1,6 @@
 import net.researchgate.release.ReleaseExtension
+import groovy.lang.Closure
+import java.util.regex.Matcher
 
 plugins {
     `maven-publish`
@@ -8,8 +10,22 @@ plugins {
 
 }
 
+val clouderaHadoopVersion = providers.gradleProperty("clouderaHadoopVersion")
+    .orElse("3.1.1.7.1.9.14-2")
+val releaseBranch = providers.gradleProperty("releaseBranch").orNull
+
+val snapshotVersionRegex = Regex(
+    """^\d+\.\d+\.\d+-[A-Za-z0-9.-]+(?:-SNAPSHOT)?$"""
+)
+
+require(snapshotVersionRegex.matches(version.toString())) {
+    "Project version '${version}' must match '<major>.<minor>.<patch>-<clouderaVersion>' " +
+            "optionally followed by '-SNAPSHOT'."
+}
+
 allprojects {
     group = "org.openprojectx.hadoop.win"
+    extra["clouderaHadoopVersion"] = clouderaHadoopVersion.get()
 }
 
 
@@ -123,8 +139,24 @@ configure<ReleaseExtension> {
     buildTasks.set(listOf("publishToSonatype", "closeAndReleaseSonatypeStagingRepository"))
     versionPropertyFile.set("gradle.properties")
     tagTemplate.set("\$name-\$version")
+    snapshotSuffix.set("-SNAPSHOT")
+    versionPatterns = mapOf(
+        """(\d+)\.(\d+)\.(\d+)-([A-Za-z0-9.-]+)$""" to
+                object : Closure<String>(project, project) {
+                    @Suppress("unused")
+                    fun doCall(matcher: Matcher, currentVersion: String): String {
+                        val major = matcher.group(1).toInt()
+                        val minor = matcher.group(2).toInt()
+                        val patch = matcher.group(3).toInt() + 1
+                        val versionSuffix = matcher.group(4)
+                        return "$major.$minor.$patch-$versionSuffix"
+                    }
+                }
+    )
 
     with(git) {
-        requireBranch.set("master")
+        if (!releaseBranch.isNullOrBlank()) {
+            requireBranch.set(releaseBranch)
+        }
     }
 }

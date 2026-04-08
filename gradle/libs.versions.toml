@@ -7,7 +7,6 @@ kotlin = "2.2.21"
 kotlinxDatetime = "0.7.1"
 kotlinxSerializationJSON = "1.9.0"
 kotlinxCoroutines = "1.10.2"
-clouderaHadoop = "3.1.1.7.1.9.14-2"
 
 
 [libraries]
@@ -17,8 +16,6 @@ kotlinSpringPlugin = { module = "org.jetbrains.kotlin.plugin.spring:org.jetbrain
 kotlinxDatetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
 kotlinxSerialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJSON" }
 kotlinxCoroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
-
-clouderaHadoopCommon = { module = "org.apache.hadoop:hadoop-common", version.ref = "clouderaHadoop" }
 
 # Libraries can be bundled together for easier import
 [bundles]

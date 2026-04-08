@@ -3,8 +3,10 @@ plugins {
     id("com.gradleup.shadow") version "8.3.6"
 }
 
+val clouderaHadoopVersion = rootProject.extra["clouderaHadoopVersion"] as String
+
 dependencies {
-    implementation(libs.clouderaHadoopCommon)
+    implementation("org.apache.hadoop:hadoop-common:$clouderaHadoopVersion")
 }
 
 tasks.named<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJar") {
