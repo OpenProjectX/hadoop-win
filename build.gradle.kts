@@ -9,11 +9,17 @@ plugins {
 }
 
 allprojects {
-    group = "org.openprojectx.hadoop.win.common"
+    group = "org.openprojectx.hadoop.win"
 }
 
 
 subprojects {
+
+    repositories {
+        mavenCentral()
+        maven(url = "https://repository.cloudera.com/repository/cloudera-repos/")
+    }
+
     tasks.register<DependencyReportTask>("allDependencies") {}
 
     // Apply to every module (safe even if a module doesn't publish)
