@@ -144,7 +144,7 @@ configure<ReleaseExtension> {
         """(\d+)\.(\d+)\.(\d+)-([A-Za-z0-9.-]+)$""" to
                 object : Closure<String>(project, project) {
                     @Suppress("unused")
-                    fun doCall(matcher: Matcher, currentVersion: String): String {
+                    fun doCall(matcher: Matcher, currentVersion: Any?): String {
                         val major = matcher.group(1).toInt()
                         val minor = matcher.group(2).toInt()
                         val patch = matcher.group(3).toInt() + 1
